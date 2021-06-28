@@ -284,8 +284,6 @@ automation:
         entity_id: input_select.humidifier_fan_speed_select
       - platform: state
         entity_id: sensor.airhumidifier_speed
-      - platform: state
-        entity_id: sensor.airpurifier_vel_level
     action:
       - choose:
         - conditions:
@@ -351,3 +349,10 @@ automation:
                   {% else %}
                   [💧] Velocità Umidificatore Impostata su {{ state_attr('fan.xiaomi_air_humidifier','preset_mode')}}
                   {% endif %}
+            - condition: template
+              value_template: "{{ states('input_select.humidifier_fan_speed_select')|trim !=  states('sensor.airhumidifier_speed') }}"
+            - service: input_select.select_option
+              target:
+                entity_id: input_select.humidifier_fan_speed_select
+              data:
+                option: "{{ states('sensor.airhumidifier_speed') }}"
