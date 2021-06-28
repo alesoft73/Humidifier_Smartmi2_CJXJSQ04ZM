@@ -340,7 +340,7 @@ automation:
             - condition: template
               value_template: "{{ state_attr('fan.xiaomi_air_humidifier','preset_mode')|trim != 'None' and  trigger.entity_id == 'sensor.airhumidifier_speed' and trigger.from_state.state != 'off' }}"
           sequence:  
-            - service: script.invia_notifiche_telegram_html5
+            - service: notify.telegram
               data:
                 message: >-
                   {% if states('sensor.airhumidifier_water_level')|int < 10 %}
