@@ -1,0 +1,353 @@
+
+##############################################################################################
+# Ricordatevi di inserire entity_id corretta >----- entity_id: fan.xiaomi_air_humidifier     #
+# ricordatevi di inserire il corretto notify per le notifiche, di default e' notify.telegram #
+##############################################################################################
+
+
+homeassistant:
+  customize:
+    sensor.humidifier_turn_off_timer_value:
+      icon: mdi:clock
+    sensor.humidifier_timers_stop_hours:
+      icon: mdi:timer
+    script.turn_off_humidifier_time:
+      icon: mdi:timer-sand
+      friendly_name: "Active Timer Humidifier Turn Off"
+    
+fan:
+  - platform: xiaomi_miio_airpurifier
+    name: Xiaomi Air Humidifier
+    host: 192.168.1.24 #ip dell'umidificatore
+    token: 811exxxxxxxxxxxxxfb6c429d154171b
+    model: zhimi.humidifier.ca4
+
+input_select:
+  humidifier_fan_speed_select:
+    name: Select Velocity
+    options:
+      - Auto
+      - Low
+      - Mid
+      - High
+    icon: mdi:fan-plus
+
+input_number:
+  airhumidifier_target_humidity:
+    name: Target humidity
+    min: 1
+    max: 99
+    step: 1
+
+  humidifier_work_time:
+    name: Start for minutes
+    icon: mdi:timer-outline
+    initial: 30
+    min: 0
+    max: 300    
+    step: 30
+    mode: slider
+
+switch:
+  - platform: template
+    switches:
+      xiaomi_airpurifier_child_lock:
+        friendly_name: "Child lock"
+        value_template: "{{ is_state_attr('fan.xiaomi_air_humidifier', 'child_lock', True) }}"
+        turn_on:
+          service: xiaomi_miio_airpurifier.fan_set_child_lock_on
+          data:
+            entity_id: fan.xiaomi_air_humidifier
+        turn_off:
+          service: xiaomi_miio_airpurifier.fan_set_child_lock_off
+          data:
+            entity_id: fan.xiaomi_air_humidifier
+        icon_template: "mdi:lock-outline"
+
+      xiaomi_airpurifier_buzzer:
+        friendly_name: "Buzzer"
+        value_template: "{{ is_state_attr('fan.xiaomi_air_humidifier', 'buzzer', True) }}"
+        turn_on:
+          service: xiaomi_miio_airpurifier.fan_set_buzzer_on
+          data:
+            entity_id: fan.xiaomi_air_humidifier
+        turn_off:
+          service: xiaomi_miio_airpurifier.fan_set_buzzer_off
+          data:
+            entity_id: fan.xiaomi_air_humidifier
+        icon_template: "mdi:volume-off"
+
+      xiaomi_airpurifier_led_high:
+        friendly_name: "LED High"
+        value_template: "{{ is_state_attr('fan.xiaomi_air_humidifier','led_brightness',2) }}"
+        turn_on:
+          service: xiaomi_miio_airpurifier.fan_set_led_brightness
+          data:
+            entity_id: fan.xiaomi_air_humidifier
+            brightness: 2
+        turn_off:
+          service: xiaomi_miio_airpurifier.fan_set_led_brightness
+          data:
+            entity_id: fan.xiaomi_air_humidifier
+            brightness: 0
+        icon_template: "mdi:lightbulb-on"
+
+      xiaomi_airpurifier_led_mid:
+        friendly_name: "LED Mid"
+        value_template: "{{ is_state_attr('fan.xiaomi_air_humidifier','led_brightness',1) }}"
+        turn_on:
+          service: xiaomi_miio_airpurifier.fan_set_led_brightness
+          data:
+            entity_id: fan.xiaomi_air_humidifier
+            brightness: 1
+        turn_off:
+          service: xiaomi_miio_airpurifier.fan_set_led_brightness
+          data:
+            entity_id: fan.xiaomi_air_humidifier
+            brightness: 0
+        icon_template: "mdi:lightbulb-on-outline"
+
+
+sensor:
+
+  - platform: template
+    sensors:
+      airhumidifier_temperature:
+        friendly_name: 'Air Humidifier Temperature'
+        value_template: '{{ states.fan.xiaomi_air_humidifier.attributes.temperature }}'
+        unit_of_measurement: '°C'
+        icon_template: mdi:thermometer-lines
+
+      airhumidifier_humidity:
+        friendly_name: 'Air Humidifier Humidity'
+        value_template: '{{ states.fan.xiaomi_air_humidifier.attributes.humidity }}'
+        unit_of_measurement: '%'
+        icon_template: mdi:water-percent
+
+      airhumidifier_target_humidity:
+        friendly_name: 'Target humidity'
+        value_template: '{{ states.fan.xiaomi_air_humidifier.attributes.target_humidity }}'
+        unit_of_measurement: '%'
+        icon_template: mdi:water-plus-outline
+
+      airhumidifier_time_work:
+        friendly_name: 'Air Humidifier Time Work'
+        value_template: '{{ ((states.fan.xiaomi_air_humidifier.attributes.power_time /60)/60)|int }}'
+        unit_of_measurement: 'hr'
+        icon_template: mdi:calendar-clock
+
+      airhumidifier_water_level:
+        friendly_name: 'Air Humidifier Water Level'
+        value_template: '{{ states.fan.xiaomi_air_humidifier.attributes.water_level }}'
+        unit_of_measurement: '%'
+        icon_template: mdi:hydraulic-oil-level
+
+      airhumidifier_speed:
+        friendly_name: 'Air Humidifier Speed'
+        value_template: |
+          {% if states.fan.xiaomi_air_humidifier.attributes.preset_mode|trim != 'None' %}
+          {{ states.fan.xiaomi_air_humidifier.attributes.preset_mode }}
+          {% else %}
+            off
+          {% endif %}
+        icon_template: mdi:fan-chevron-up
+
+      humidifier_turn_off_timer_value:
+        friendly_name: 'Timer Turn Off'
+        value_template: >
+          {{ (now().strftime("%s") | int + states("input_number.humidifier_work_time")|int * 60 ) | timestamp_custom("%H:%M",false)}}
+
+      humidifier_water_level:
+        friendly_name: 'Water Level'
+        value_template: >
+          {% set level = states('sensor.airhumidifier_water_level')|int %}
+          {% if level <= 12.5 %} 1 {% elif level <= 25 %} 2 {% elif level <= 37.5 %} 3 {% elif level <= 50 %} 4
+          {% elif level <= 62.5 %} 5 {% elif level <= 75 %} 6 {% elif level <= 87.5 %} 7 {% else %} 8 {% endif %}
+
+      humidifier_vel_level:
+        friendly_name: 'Speed Humidifier detect'
+        value_template: >
+          {% set vel = state_attr('fan.xiaomi_air_humidifier','speed')|trim %}
+          {% if vel == '' or vel == 'null' or vel == 'None' %} Spento {% elif vel == 'Auto' %} Auto {% elif vel == 'Mid' %} Mid {% elif vel == 'Low' %} Low
+          {% else %} High {% endif %}          
+
+      humidifier_timers_stop_hours:
+        friendly_name: 'Duration Timer'
+        value_template: >
+          {% set timers = states("input_number.humidifier_work_time")|int %}
+          {% set minutes = ((states("input_number.humidifier_work_time")|int * 60)  | timestamp_custom("%M",false)) | int %} 
+          {% set hours= ((states("input_number.humidifier_work_time")|int * 60)  | timestamp_custom("%H",false)) | int %}
+          {%- if timers  < 60 -%}
+            {%- if timers == 1 -%}
+            {{ timers }} Minuto
+            {% else %}
+            {{ timers }} Minuti
+            {% endif %}
+          {% else %}
+            {%- if timers >= 60 and timers < 120 %}
+            {{ hours }} ora {% if minutes != 0  %}e {{ minutes }} Min.{% endif %}
+            {% else %}
+            {{ hours }} ore {% if minutes != 0  %}e {{ minutes }} Min.{% endif %}
+            {% endif %}
+          {% endif %}     
+
+script:
+  turn_off_humidifier_time:
+    mode: restart
+    sequence:
+      - choose:
+          - conditions:
+            - condition: template
+              value_template: "{{ is_state('fan.xiaomi_air_humidifier','on') }}"
+            sequence :
+              # persistent_notification.create
+              - service: notify.telegram
+                data:
+                  message: >
+                    [🌡] Sono le {{ now().strftime("%H:%M") }} e l'Umidificatore si 
+                    chiuderà tra {{ states("input_number.humidifier_work_time")|int }} {% if states("input_number.humidifier_work_time")|int > 1 %}Minuti{% else %}Minuto{% endif %}.
+                    {{"\n"}}Precisamente alle ore :  {{ (now().strftime("%s") | int + states("input_number.humidifier_work_time")|int * 60 ) | timestamp_custom("%H:%M",false)}}.
+
+              - delay:
+                  minutes: '{{ states("input_number.humidifier_work_time")|int }}'
+              - condition: template
+                value_template: "{{ is_state('fan.xiaomi_air_humidifier','on') }}"          
+              - service: homeassistant.turn_off
+                entity_id: fan.xiaomi_air_humidifier
+              # persistent_notification.create
+              - service: notify.telegram
+                data:
+                  message: >
+                    {% set timers = states("input_number.humidifier_work_time")|int %}
+                    [💤] Umidificatore Spento alle ore {{ now().strftime("%H:%M") }} ed è stato acceso per {{states('sensor.humidifier_timers_stop_hours')}}
+
+        default:
+          # persistent_notification.create se non avete il servizio notify telegram
+          - service: notify.telegram
+            data:
+              message: >
+                [⚠️] Umidificatore spento, devi prima accenderlo.
+                
+automation:
+
+# impostazione umidità desiderata
+
+  - id: 75855824-aa2a-4bdd-b472-f9f3a67d73c8
+    alias: Select target humidity by slider
+    trigger:
+      platform: state
+      entity_id: input_number.airhumidifier_target_humidity
+    action:
+      - service: xiaomi_miio_airpurifier.fan_set_target_humidity
+        data:
+          entity_id: fan.xiaomi_air_humidifier
+          humidity: '{{ states.input_number.airhumidifier_target_humidity.state|int }}'
+
+  - id: 5ddebb3e-c713-4313-a1d9-02ccbafaa628
+    alias: Monitor target humidity and update slider
+    trigger:
+      platform: state
+      entity_id: sensor.airhumidifier_target_humidity
+    action:
+      service: input_number.set_value
+      entity_id: input_number.airhumidifier_target_humidity
+      data:
+        value: '{{ states.fan.xiaomi_air_humidifier.attributes.target_humidity }}'
+
+ ###########################################################################################
+# notifica mancanza acqua
+
+  - id: 01d9e5ee-71c3-4d21-bf10-a2d7cbef7cf3
+    alias: Humidifier - Water tank Empty
+    initial_state: 'true'
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.airhumidifier_water_level
+        below: 10
+    action:
+      # persistent_notification.create se non avete il servizio notify telegram
+      - service: notify.telegram
+        data:
+          message: >
+            [💧] L'Acqua nel serbatoio dell'Umidificatore si sta esaurendo. Il livello è del {{ states('sensor.airhumidifier_water_level')}}%.
+
+
+
+# selezione velocita umidificatore
+
+  - id: d5ee03e0-5fbd-4c14-bf5b-200a15355d8a
+    alias: Humidifier - Velocity Select
+    initial_state: 'true'
+    mode: restart
+    trigger:
+      - platform: state
+        entity_id: input_select.humidifier_fan_speed_select
+      - platform: state
+        entity_id: sensor.airhumidifier_speed
+      - platform: state
+        entity_id: sensor.airpurifier_vel_level
+    action:
+      - choose:
+        - conditions:
+            - condition: template
+              value_template: "{{ trigger.entity_id == 'sensor.airpurifier_vel_level' }}"
+          sequence: 
+            - service: input_select.select_option
+              target:
+                entity_id: input_select.humidifier_fan_speed_select
+              data:
+                option: "{{ states('sensor.airhumidifier_speed') }}"
+        - conditions:
+            - condition: template
+              value_template: "{{ trigger.to_state.state == 'Auto' and trigger.entity_id == 'input_select.humidifier_fan_speed_select' }}"
+          sequence:  
+            - service: homeassistant.turn_on
+              entity_id: fan.xiaomi_air_humidifier
+            - service: fan.set_preset_mode
+              data:      
+                entity_id: fan.xiaomi_air_humidifier
+                preset_mode: auto
+        - conditions:
+            - condition: template
+              value_template: "{{ trigger.to_state.state == 'Low' and trigger.entity_id == 'input_select.humidifier_fan_speed_select' }}"
+          sequence: 
+            - service: homeassistant.turn_on
+              entity_id: fan.xiaomi_air_humidifier                       
+            - service: fan.set_preset_mode
+              data:      
+                entity_id: fan.xiaomi_air_humidifier
+                preset_mode: low
+        - conditions:
+            - condition: template
+              value_template: "{{ trigger.to_state.state == 'Mid' and trigger.entity_id == 'input_select.humidifier_fan_speed_select' }}"
+          sequence: 
+            - service: homeassistant.turn_on
+              entity_id: fan.xiaomi_air_humidifier                       
+            - service: fan.set_preset_mode
+              data:
+                entity_id: fan.xiaomi_air_humidifier
+                preset_mode: mid
+        - conditions:
+            - condition: template
+              value_template: "{{ trigger.to_state.state == 'High' and trigger.entity_id == 'input_select.humidifier_fan_speed_select' }}"
+          sequence:  
+            - service: homeassistant.turn_on
+              entity_id: fan.xiaomi_air_humidifier                    
+            - service: fan.set_preset_mode
+              data:      
+                entity_id: fan.xiaomi_air_humidifier
+                preset_mode: high
+      - choose:
+        - conditions:
+            - condition: template
+              value_template: "{{ state_attr('fan.xiaomi_air_humidifier','preset_mode')|trim != 'None' and  trigger.entity_id == 'sensor.airhumidifier_speed' and trigger.from_state.state != 'off' }}"
+          sequence:  
+            - service: script.invia_notifiche_telegram_html5
+              data:
+                message: >-
+                  {% if states('sensor.airhumidifier_water_level')|int < 10 %}
+                  [💧] Il livello dell'acqua è sotto il 10%  
+                   La Velocità Umidificatore sarà pre impostata in Auto!
+                  {% else %}
+                  [💧] Velocità Umidificatore Impostata su {{ state_attr('fan.xiaomi_air_humidifier','preset_mode')}}
+                  {% endif %}
