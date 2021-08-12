@@ -35,8 +35,8 @@ input_select:
 input_number:
   airhumidifier_target_humidity:
     name: Target humidity
-    min: 1
-    max: 99
+    min: 30
+    max: 80
     step: 1
 
   humidifier_work_time:
@@ -114,31 +114,31 @@ sensor:
     sensors:
       airhumidifier_temperature:
         friendly_name: 'Air Humidifier Temperature'
-        value_template: '{{ states.fan.xiaomi_air_humidifier.attributes.temperature }}'
+        value_template: '{{ states.fan.xiaomi_air_humidifier.attributes.temperature | default (0) }}'
         unit_of_measurement: '°C'
         icon_template: mdi:thermometer-lines
 
       airhumidifier_humidity:
         friendly_name: 'Air Humidifier Humidity'
-        value_template: '{{ states.fan.xiaomi_air_humidifier.attributes.humidity }}'
+        value_template: '{{ states.fan.xiaomi_air_humidifier.attributes.humidity | default (0) }}'
         unit_of_measurement: '%'
         icon_template: mdi:water-percent
 
       airhumidifier_target_humidity:
         friendly_name: 'Target humidity'
-        value_template: '{{ states.fan.xiaomi_air_humidifier.attributes.target_humidity }}'
+        value_template: '{{ states.fan.xiaomi_air_humidifier.attributes.target_humidity | default (0) }}'
         unit_of_measurement: '%'
         icon_template: mdi:water-plus-outline
 
       airhumidifier_time_work:
         friendly_name: 'Air Humidifier Time Work'
-        value_template: '{{ ((states.fan.xiaomi_air_humidifier.attributes.power_time /60)/60)|int }}'
+        value_template: '{{ ((states.fan.xiaomi_air_humidifier.attributes.power_time /60)/60)|int | default (0) }}'
         unit_of_measurement: 'hr'
         icon_template: mdi:calendar-clock
 
       airhumidifier_water_level:
         friendly_name: 'Air Humidifier Water Level'
-        value_template: '{{ states.fan.xiaomi_air_humidifier.attributes.water_level }}'
+        value_template: '{{ states.fan.xiaomi_air_humidifier.attributes.water_level | default (0) }}'
         unit_of_measurement: '%'
         icon_template: mdi:hydraulic-oil-level
 
