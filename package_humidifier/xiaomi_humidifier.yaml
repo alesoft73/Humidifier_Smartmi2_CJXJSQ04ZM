@@ -234,6 +234,7 @@ automation:
 
   - id: 75855824-aa2a-4bdd-b472-f9f3a67d73c8
     alias: Select target humidity by slider
+    mode: restart
     trigger:
       platform: state
       entity_id: input_number.airhumidifier_target_humidity
@@ -245,6 +246,7 @@ automation:
 
   - id: 5ddebb3e-c713-4313-a1d9-02ccbafaa628
     alias: Monitor target humidity and update slider
+    mode: restart
     trigger:
       platform: state
       entity_id: sensor.airhumidifier_target_humidity
@@ -260,6 +262,7 @@ automation:
   - id: 01d9e5ee-71c3-4d21-bf10-a2d7cbef7cf3
     alias: Humidifier - Water tank Empty
     initial_state: 'true'
+    mode: queued
     trigger:
       - platform: numeric_state
         entity_id: sensor.airhumidifier_water_level
