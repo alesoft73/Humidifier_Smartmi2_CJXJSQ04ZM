@@ -120,13 +120,13 @@ sensor:
 
       airhumidifier_humidity:
         friendly_name: 'Air Humidifier Humidity'
-        value_template: "{{ state_attr('fan.xiaomi_air_humidifier','humidity')|float(default=0) }}"
+        value_template: "{{ state_attr('fan.xiaomi_air_humidifier','humidity')|int }}"
         unit_of_measurement: '%'
         icon_template: mdi:water-percent
 
       airhumidifier_target_humidity:
         friendly_name: 'Target humidity'
-        value_template: "{{ state_attr('fan.xiaomi_air_humidifier','target_humidity')|float(default=0) }}"
+        value_template: "{{ state_attr('fan.xiaomi_air_humidifier','target_humidity')|int }}"
         unit_of_measurement: '%'
         icon_template: mdi:water-plus-outline
 
@@ -138,7 +138,7 @@ sensor:
 
       airhumidifier_water_level:
         friendly_name: 'Air Humidifier Water Level'
-        value_template: '{{ states.fan.xiaomi_air_humidifier.attributes.water_level | default (0) }}'
+        value_template: '{{ state_attr('fan.xiaomi_air_humidifier','water_level') | int }}'
         unit_of_measurement: '%'
         icon_template: mdi:hydraulic-oil-level
 
