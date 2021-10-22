@@ -114,25 +114,25 @@ sensor:
     sensors:
       airhumidifier_temperature:
         friendly_name: 'Air Humidifier Temperature'
-        value_template: '{{ states.fan.xiaomi_air_humidifier.attributes.temperature | default (0) }}'
+        value_template: "{{ state_attr('fan.xiaomi_air_humidifier','temperature')|float(default=0) }}"
         unit_of_measurement: '°C'
         icon_template: mdi:thermometer-lines
 
       airhumidifier_humidity:
         friendly_name: 'Air Humidifier Humidity'
-        value_template: '{{ states.fan.xiaomi_air_humidifier.attributes.humidity | default (0) }}'
+        value_template: "{{ state_attr('fan.xiaomi_air_humidifier','humidity')|float(default=0) }}"
         unit_of_measurement: '%'
         icon_template: mdi:water-percent
 
       airhumidifier_target_humidity:
         friendly_name: 'Target humidity'
-        value_template: '{{ states.fan.xiaomi_air_humidifier.attributes.target_humidity | default (0) }}'
+        value_template: "{{ state_attr('fan.xiaomi_air_humidifier','target_humidity')|float(default=0) }}"
         unit_of_measurement: '%'
         icon_template: mdi:water-plus-outline
 
       airhumidifier_time_work:
         friendly_name: 'Air Humidifier Time Work'
-        value_template: '{{ ((states.fan.xiaomi_air_humidifier.attributes.power_time /60)/60)|int | default (0) }}'
+        value_template: "{{ ((state_attr('fan.xiaomi_air_humidifier','power_time') /60)/60)|int }}"
         unit_of_measurement: 'hr'
         icon_template: mdi:calendar-clock
 
@@ -145,8 +145,8 @@ sensor:
       airhumidifier_speed:
         friendly_name: 'Air Humidifier Speed'
         value_template: |
-          {% if states.fan.xiaomi_air_humidifier.attributes.preset_mode|trim != 'None' %}
-          {{ states.fan.xiaomi_air_humidifier.attributes.preset_mode }}
+          {% if state_attr('fan.xiaomi_air_humidifier','preset_mode')|trim != 'None' %}
+          {{ state_attr('fan.xiaomi_air_humidifier','preset_mode') }}
           {% else %}
             off
           {% endif %}
@@ -241,7 +241,7 @@ automation:
       - service: xiaomi_miio_airpurifier.fan_set_target_humidity
         data:
           entity_id: fan.xiaomi_air_humidifier
-          humidity: '{{ states.input_number.airhumidifier_target_humidity.state|int }}'
+          humidity: "{{ states('input_number.airhumidifier_target_humidity')|int }}"
 
   - id: 5ddebb3e-c713-4313-a1d9-02ccbafaa628
     alias: Monitor target humidity and update slider
@@ -252,7 +252,7 @@ automation:
       service: input_number.set_value
       entity_id: input_number.airhumidifier_target_humidity
       data:
-        value: '{{ states.fan.xiaomi_air_humidifier.attributes.target_humidity }}'
+        value: '{{ state_attr('fan.xiaomi_air_humidifier','target_humidity') }}'
 
  ###########################################################################################
 # notifica mancanza acqua
