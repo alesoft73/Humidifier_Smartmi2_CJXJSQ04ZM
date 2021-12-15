@@ -267,6 +267,7 @@ automation:
       - platform: numeric_state
         entity_id: sensor.airhumidifier_water_level
         below: 10
+        above: 0
     action:
       # persistent_notification.create se non avete il servizio notify telegram
       - service: notify.telegram
