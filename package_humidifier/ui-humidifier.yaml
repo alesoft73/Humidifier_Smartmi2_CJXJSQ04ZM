@@ -1,419 +1,413 @@
 ###########################################
 ########   HUMIDIFIER   ###################
 ###########################################
-######################### DEUMIDIFICATORE BAGNO
 
-  - type: picture-elements
-    image: /local/smartmi/vuoto+tavolo.png
-    style: |
-      @keyframes blinker { 50% { opacity: 0; } }  
-      ha-card {
-        background: none;
-        --icon-color: {% if is_state('fan.xiaomi_air_humidifier', 'on') %} 
-                      red;
-                      {% else %} 
-                      #C4C4C4;
-                      {% endif %}                  
-        }
-    elements:
-      - type: image
-        entity: fan.xiaomi_air_humidifier
-        style:
-          top: 10%
-          left: 5%
-          width: 5%        
-        tap_action: 
-          action: toggle
-        state_image:
-          "off": /local/smartmi/power_on.png
-          "on": /local/smartmi/power_on_green.png
-      - type: image
-        entity: fan.xiaomi_air_humidifier
-        image: /local/smartmi/front.gif
-        state_filter:
-           'off': null
-           'on': null
-        style:
-          left: 31.4%
-          top: 59%
-          width: 20%
+- type: vertical-stack
+  title: ''
+  cards:
+    - type: picture-elements
+      image: /local/immagini/lovelace/vuoto+tavolo.png
+      style: |
+        @keyframes blinker { 50% { opacity: 0; } }  
+        ha-card {
+          background: none;
+          --icon-color: {% if is_state('humidifier.zhimi_humidifier_ca4', 'on') %} 
+                        red;
+                        {% else %} 
+                        #C4C4C4;
+                        {% endif %}                  
+          }
+      elements:
+        - type: image
+          entity: humidifier.zhimi_humidifier_ca4
+          style:
+            top: 10%
+            left: 5%
+            width: 5%        
+          tap_action: 
+            action: toggle
+          state_image:
+            "off": /local/smartmi/power_on.png
+            "on": /local/smartmi/power_on_green.png
+        
+        - type: image
+          entity: humidifier.zhimi_humidifier_ca4
+          image: /local/smartmi/front.gif
+          state_filter:
+             'off': null
+             'on': null
+          style:
+            left: 31.4%
+            top: 59%
+            width: 20%
+            
+        - type: image
+          entity: humidifier.zhimi_humidifier_ca4
+          image: /local/smartmi/fumo1.png
+          state_filter:
+             'off': opacity(0.0)
+             'on': null
+          style:
+            left: 31.4%
+            top: 25%
+            width: 25%
+            animation: blinker 7s linear infinite
+            
+        - type: state-label
+          entity: sensor.zhimi_humidifier_ca4_temperature
+          prefix: "Temperatura : "
+          style:
+            top: 0
+            left: 40%
+            font-family: Verdana
+            font-variant: small-caps  
+            font-weight: bold        
+            pointer-events: none
+            transform: initial
+            font-size: 10px
+            color: 'var(--icon-color)'
+            line-height: 15px
+            padding: 4px 35px  
 
-      - type: image
-        entity: fan.xiaomi_air_humidifier
-        image: /local/smartmi/fumo1.png
-        state_filter:
-           'off': opacity(0.0)
-           'on': null
-        style:
-          left: 31.4%
-          top: 25%
-          width: 25%
-          animation: blinker 7s linear infinite
-    
-      - type: state-label
-        entity: sensor.airhumidifier_temperature
-        prefix: "Temperatura : "
-        style:
-          top: 0
-          left: 40%
-          font-family: Verdana
-          font-variant: small-caps  
-          font-weight: bold        
-          pointer-events: none
-          transform: initial
-          font-size: 10px
-          color: 'var(--icon-color)'
-          line-height: 15px
-          padding: 4px 35px
+        - type: state-label
+          entity: sensor.zhimi_humidifier_ca4_water_level
+          prefix: "Livello Acqua : "
+          style:
+            top: 10%
+            left: 40%
+            font-family: Verdana
+            font-variant: small-caps  
+            font-weight: bold        
+            pointer-events: none
+            transform: initial
+            font-size: 10px
+            color: 'var(--icon-color)'
+            line-height: 15px
+            padding: 4px 35px
+        
+        - type: state-label
+          entity: sensor.airhumidifier_speed
+          prefix: "Velocità : "
+          style:
+            top: 20%
+            left: 40%
+            font-family: Verdana
+            font-variant: small-caps  
+            font-weight: bold        
+            pointer-events: none
+            transform: initial
+            font-size: 10px
+            color: 'var(--icon-color)'
+            line-height: 15px
+            padding: 4px 35px
+            
+        - type: state-label
+          entity: sensor.airhumidifier_target_humidity
+          style:
+            top: 0
+            left: 14%
+            font-family: Verdana, sans-serif
+            font-variant: small-caps  
+            font-weight: bold        
+            pointer-events: none
+            transform: initial
+            font-size: 10px
+            color: 'var(--icon-color)'
+            line-height: 20px
+            padding: 4px 35px  
 
-      - type: state-label
-        entity: sensor.airhumidifier_water_level
-        prefix: "Livello Acqua : "
-        style:
-          top: 10%
-          left: 40%
-          font-family: Verdana
-          font-variant: small-caps  
-          font-weight: bold        
-          pointer-events: none
-          transform: initial
-          font-size: 10px
-          color: 'var(--icon-color)'
-          line-height: 15px
-          padding: 4px 35px
-      
-      - type: state-label
-        entity: sensor.airhumidifier_speed
-        prefix: "Velocità : "
-        style:
-          top: 20%
-          left: 40%
-          font-family: Verdana
-          font-variant: small-caps  
-          font-weight: bold        
-          pointer-events: none
-          transform: initial
-          font-size: 10px
-          color: 'var(--icon-color)'
-          line-height: 15px
-          padding: 4px 35px
+        - type: icon
+          icon: mdi:water-plus-outline
+          title: target
+          style:
+            top: 0
+            left: 15%
+            pointer-events: none
+            transform: scale(0.8)
+            color: 'var(--icon-color)'
+            line-height: 15px
+            padding: 10px 13px  
+
+        - type: custom:mini-graph-card
+          style:
+            '--ha-card-border-radius': '0px'        
+            '--primary-text-color': '#C4C4C4'
+            '--paper-item-icon-color': '#C4C4C4'
+            .: |
+              ha-card {
+                background: transparent;
+                }
+            top: 60%
+            left: 70%
+            width: 45%
+          entities:
+            - entity: sensor.zhimi_humidifier_ca4_humidity
+              name: Umidificatore
+          icon: mdi:air-humidifier
+          line_color: red
+          align_header: right
+          align_state: right
+          font_size_header: 10
+          font_size: 40
+          show:
+            icon: true  
+            name: false      
+            
+    - type: picture-elements
+      image: /local/smartmi/panel.gif         
+      elements:
+        - type: state-label
+          entity: sensor.zhimi_humidifier_ca4_humidity
+          prefix: ""
+          style:
+            color: white
+            font-family: Verdana
+            top: 51%
+            left: 35%
+            font-size: 100%
+            
+        - type: image
+          entity: sensor.humidifier_water_level
+          image: /local/smartmi/water_thank_1.gif
+          state_filter:
+             '1': null
+             '2': opacity(0.0)
+             '3': opacity(0.0)
+             '4': opacity(0.0)
+             '5': opacity(0.0)
+             '6': opacity(0.0)
+             '7': opacity(0.0)
+             '8': opacity(0.0)
+          style:
+            left: 53%
+            top: 51%
+            width: 25%
+            
+        - type: image
+          entity: sensor.humidifier_water_level
+          image: /local/smartmi/water_thank_2.gif
+          state_filter:
+             '1': opacity(0.0)
+             '2': null
+             '3': opacity(0.0)
+             '4': opacity(0.0)
+             '5': opacity(0.0)
+             '6': opacity(0.0)
+             '7': opacity(0.0)
+             '8': opacity(0.0)
+          style:
+            left: 53%
+            top: 51%
+            width: 25%
+            
+        - type: image
+          entity: sensor.humidifier_water_level
+          image: /local/smartmi/water_thank_3.gif
+          state_filter:
+             '1': opacity(0.0)
+             '2': opacity(0.0)
+             '3': null
+             '4': opacity(0.0)
+             '5': opacity(0.0)
+             '6': opacity(0.0)
+             '7': opacity(0.0)
+             '8': opacity(0.0)
+          style:
+            left: 53%
+            top: 51%
+            width: 25%
+            
+        - type: image
+          entity: sensor.humidifier_water_level
+          image: /local/smartmi/water_thank_4.gif
+          state_filter:
+             '1': opacity(0.0)
+             '2': opacity(0.0)
+             '3': opacity(0.0)
+             '4': null
+             '5': opacity(0.0)
+             '6': opacity(0.0)
+             '7': opacity(0.0)
+             '8': opacity(0.0)
+          style:
+            left: 53%
+            top: 51%
+            width: 25%
+            
+        - type: image
+          entity: sensor.humidifier_water_level
+          image: /local/smartmi/water_thank_5.gif
+          state_filter:
+             '1': opacity(0.0)
+             '2': opacity(0.0)
+             '3': opacity(0.0)
+             '4': opacity(0.0)
+             '5': null
+             '6': opacity(0.0)
+             '7': opacity(0.0)
+             '8': opacity(0.0)
+          style:
+            left: 53%
+            top: 51%
+            width: 25%
+            
+        - type: image
+          entity: sensor.humidifier_water_level
+          image: /local/smartmi/water_thank_6.gif
+          state_filter:
+             '1': opacity(0.0)
+             '2': opacity(0.0)
+             '3': opacity(0.0)
+             '4': opacity(0.0)
+             '5': opacity(0.0)
+             '6': null
+             '7': opacity(0.0)
+             '8': opacity(0.0)
+          style:
+            left: 53%
+            top: 51%
+            width: 25%
+            
+        - type: image
+          entity: sensor.humidifier_water_level
+          image: /local/smartmi/water_thank_7.gif
+          state_filter:
+             '1': opacity(0.0)
+             '2': opacity(0.0)
+             '3': opacity(0.0)
+             '4': opacity(0.0)
+             '5': opacity(0.0)
+             '6': opacity(0.0)
+             '7': null
+             '8': opacity(0.0)
+          style:
+            left: 53%
+            top: 51%
+            width: 25%
+            
+        - type: image
+          entity: sensor.humidifier_water_level
+          image: /local/smartmi/water_thank_8.gif
+          state_filter:
+             '1': opacity(0.0)
+             '2': opacity(0.0)
+             '3': opacity(0.0)
+             '4': opacity(0.0)
+             '5': opacity(0.0)
+             '6': opacity(0.0)
+             '7': opacity(0.0)
+             '8': null
+          style:
+            left: 53%
+            top: 51%
+            width: 25%
           
-      - type: state-label
-        entity: sensor.airhumidifier_target_humidity
-        style:
-          top: 0
-          left: 14%
-          font-family: Verdana, sans-serif
-          font-variant: small-caps  
-          font-weight: bold        
-          pointer-events: none
-          transform: initial
-          font-size: 10px
-          color: 'var(--icon-color)'
-          line-height: 20px
-          padding: 4px 35px
+        - type: image
+          entity: sensor.humidifier_vel_level
+          image: /local/smartmi/vel_auto.gif
+          state_filter:
+            'Spento': opacity(0.0)
+            'Auto': null 
+            'Low': opacity(0.0)
+            'Mid': opacity(0.0)
+            'High': opacity(0.0)
+          style:
+            left: 62%
+            top: 48%
+            width: 4%
+            
+        - type: image
+          entity: sensor.humidifier_vel_level
+          image: /local/smartmi/vel_low.gif
+          state_filter:
+            'Spento': opacity(0.0)
+            'Auto': opacity(0.0)
+            'Low': null
+            'Mid': opacity(0.0)
+            'High': opacity(0.0)
+          style:
+            left: 62%
+            top: 48%
+            width: 4%           
+            
+        - type: image
+          entity: sensor.humidifier_vel_level
+          image: /local/smartmi/vel_mid.gif
+          state_filter:
+            'spento': opacity(0.0)
+            'Auto': opacity(0.0)
+            'Low': opacity(0.0)
+            'Mid': null
+            'High': opacity(0.0)
+          style:
+            left: 62%
+            top: 48%
+            width: 4%
+            
+        - type: image
+          entity: sensor.humidifier_vel_level
+          image: /local/smartmi/vel_high.gif
+          state_filter:
+            'spento': opacity(0.0)
+            'Auto': opacity(0.0)
+            'Low': opacity(0.0)
+            'Mid': opacity(0.0)
+            'High': null
+          style:
+            left: 62%
+            top: 48%
+            width: 4%
+            
+        - type: image
+          entity: sensor.humidifier_vel_level
+          image: /local/smartmi/panel_off.gif
+          state_filter:
+            'Spento': null
+            'Auto': opacity(0.0)
+            'Low': opacity(0.0)
+            'Mid': opacity(0.0)
+            'High': opacity(0.0)
+          style:
+            left: 62%
+            top: 48%
+            width: 10%          
+ 
 
-      - type: icon
-        icon: mdi:water-plus-outline
-        title: target
-        style:
-          top: 0
-          left: 15%
-          pointer-events: none
-          transform: scale(0.8)
-          color: 'var(--icon-color)'
-          line-height: 15px
-          padding: 10px 13px
 
-      - type: custom:mini-graph-card
-        style:
-          '--ha-card-border-radius': '0px'        
-          '--primary-text-color': '#C4C4C4'
-          '--paper-item-icon-color': '#C4C4C4'
-          .: |
-            ha-card {
-              background: transparent;
-              }
-          top: 60%
-          left: 70%
-          width: 45%
-        entities:
-          - entity: sensor.airhumidifier_humidity
-            name: Umidificatore
-        icon: mdi:air-humidifier
-        line_color: red
-        align_header: right
-        align_state: right
-        font_size_header: 10
-        font_size: 40
-        show:
-          icon: true  
-          name: false      
-    
-    
-  - type: picture-elements
-    image: /local/smartmi/panel.gif         
-    elements:
-      - type: state-label
-        entity: sensor.airhumidifier_humidity
-        prefix: ""
-        style:
-          color: white
-          font-family: Verdana
-          top: 51%
-          left: 35%
-          font-size: 100%
 
-      - type: image
-        entity: sensor.humidifier_water_level
-        image: /local/smartmi/water_thank_1.gif
-        state_filter:
-           '1': null
-           '2': opacity(0.0)
-           '3': opacity(0.0)
-           '4': opacity(0.0)
-           '5': opacity(0.0)
-           '6': opacity(0.0)
-           '7': opacity(0.0)
-           '8': opacity(0.0)
-        style:
-          left: 53%
-          top: 51%
-          width: 25%
-          
-      - type: image
-        entity: sensor.humidifier_water_level
-        image: /local/smartmi/water_thank_2.gif
-        state_filter:
-           '1': opacity(0.0)
-           '2': null
-           '3': opacity(0.0)
-           '4': opacity(0.0)
-           '5': opacity(0.0)
-           '6': opacity(0.0)
-           '7': opacity(0.0)
-           '8': opacity(0.0)
-        style:
-          left: 53%
-          top: 51%
-          width: 25%
 
-      - type: image
-        entity: sensor.humidifier_water_level
-        image: /local/smartmi/water_thank_3.gif
-        state_filter:
-           '1': opacity(0.0)
-           '2': opacity(0.0)
-           '3': null
-           '4': opacity(0.0)
-           '5': opacity(0.0)
-           '6': opacity(0.0)
-           '7': opacity(0.0)
-           '8': opacity(0.0)
-        style:
-          left: 53%
-          top: 51%
-          width: 25%
 
-      - type: image
-        entity: sensor.humidifier_water_level
-        image: /local/smartmi/water_thank_4.gif
-        state_filter:
-           '1': opacity(0.0)
-           '2': opacity(0.0)
-           '3': opacity(0.0)
-           '4': null
-           '5': opacity(0.0)
-           '6': opacity(0.0)
-           '7': opacity(0.0)
-           '8': opacity(0.0)
-        style:
-          left: 53%
-          top: 51%
-          width: 25%
+-  type: entities
+   show_header_toggle: false
+   state_color: true
+   title: Humidifier Timers
+   entities:
+     - input_number.humidifier_work_time
+     - sensor.humidifier_timers_stop_hours
+     - sensor.humidifier_turn_off_timer_value
+     - script.turn_off_humidifier_time
 
-      - type: image
-        entity: sensor.humidifier_water_level
-        image: /local/smartmi/water_thank_5.gif
-        state_filter:
-           '1': opacity(0.0)
-           '2': opacity(0.0)
-           '3': opacity(0.0)
-           '4': opacity(0.0)
-           '5': null
-           '6': opacity(0.0)
-           '7': opacity(0.0)
-           '8': opacity(0.0)
-        style:
-          left: 53%
-          top: 51%
-          width: 25%
-
-      - type: image
-        entity: sensor.humidifier_water_level
-        image: /local/smartmi/water_thank_6.gif
-        state_filter:
-           '1': opacity(0.0)
-           '2': opacity(0.0)
-           '3': opacity(0.0)
-           '4': opacity(0.0)
-           '5': opacity(0.0)
-           '6': null
-           '7': opacity(0.0)
-           '8': opacity(0.0)
-        style:
-          left: 53%
-          top: 51%
-          width: 25%
-
-      - type: image
-        entity: sensor.humidifier_water_level
-        image: /local/smartmi/water_thank_7.gif
-        state_filter:
-           '1': opacity(0.0)
-           '2': opacity(0.0)
-           '3': opacity(0.0)
-           '4': opacity(0.0)
-           '5': opacity(0.0)
-           '6': opacity(0.0)
-           '7': null
-           '8': opacity(0.0)
-        style:
-          left: 53%
-          top: 51%
-          width: 25%
-
-      - type: image
-        entity: sensor.humidifier_water_level
-        image: /local/smartmi/water_thank_8.gif
-        state_filter:
-           '1': opacity(0.0)
-           '2': opacity(0.0)
-           '3': opacity(0.0)
-           '4': opacity(0.0)
-           '5': opacity(0.0)
-           '6': opacity(0.0)
-           '7': opacity(0.0)
-           '8': null
-        style:
-          left: 53%
-          top: 51%
-          width: 25%
-
-      - type: image
-        entity: sensor.humidifier_vel_level
-        image: /local/smartmi/vel_auto.gif
-        state_filter:
-          'Spento': opacity(0.0)
-          'Auto': null 
-          'Low': opacity(0.0)
-          'Mid': opacity(0.0)
-          'High': opacity(0.0)
-        style:
-          left: 62%
-          top: 48%
-          width: 4%
-
-      - type: image
-        entity: sensor.humidifier_vel_level
-        image: /local/smartmi/vel_low.gif
-        state_filter:
-          'Spento': opacity(0.0)
-          'Auto': opacity(0.0)
-          'Low': null
-          'Mid': opacity(0.0)
-          'High': opacity(0.0)
-        style:
-          left: 62%
-          top: 48%
-          width: 4%
-
-      - type: image
-        entity: sensor.humidifier_vel_level
-        image: /local/smartmi/vel_mid.gif
-        state_filter:
-          'spento': opacity(0.0)
-          'Auto': opacity(0.0)
-          'Low': opacity(0.0)
-          'Mid': null
-          'High': opacity(0.0)
-        style:
-          left: 62%
-          top: 48%
-          width: 4%
-
-      - type: image
-        entity: sensor.humidifier_vel_level
-        image: /local/smartmi/vel_high.gif
-        state_filter:
-          'spento': opacity(0.0)
-          'Auto': opacity(0.0)
-          'Low': opacity(0.0)
-          'Mid': opacity(0.0)
-          'High': null
-        style:
-          left: 62%
-          top: 48%
-          width: 4%
-
-      - type: image
-        entity: sensor.humidifier_vel_level
-        image: /local/smartmi/panel_off.gif
-        state_filter:
-          'Spento': null
-          'Auto': opacity(0.0)
-          'Low': opacity(0.0)
-          'Mid': opacity(0.0)
-          'High': opacity(0.0)
-        style:
-          left: 62%
-          top: 48%
-          width: 10%          
+-  type: entities
+   show_header_toggle: false
+   state_color: true
+   title: Humidifier Settings
+   entities:
+     - entity: humidifier.zhimi_humidifier_ca4
+     - entity: input_select.humidifier_fan_speed_select
+     - entity: switch.zhimi_humidifier_ca4_buzzer
+     - entity: switch.zhimi_humidifier_ca4_child_lock
+     - entity: select.zhimi_humidifier_ca4_led_brightness
+     - entity: switch.zhimi_humidifier_ca4_dry_mode
+     - entity: switch.zhimi_humidifier_ca4_clean_mode
+     - entity: sensor.zhimi_humidifier_ca4_temperature
+     - entity: sensor.zhimi_humidifier_ca4_humidity
+     - entity: sensor.airhumidifier_target_humidity
+     - entity: input_number.airhumidifier_target_humidity
+     - entity: sensor.airhumidifier_time_work
+     - entity: sensor.zhimi_humidifier_ca4_water_level
+     - entity: sensor.airhumidifier_speed
+     - entity: number.zhimi_humidifier_ca4_motor_speed
+     - entity: sensor.zhimi_humidifier_ca4_actual_speed
+     - entity: automation.select_target_humidity_by_slider
+     - entity: automation.monitor_target_humidity_and_update_slider  
    
-
-
-
-
-
-
-
-
-
-
-
-
-          #animation: blinker 7s linear infinite
-        #tap_action:
-        #  action: toggle  
-
-
-#humidifier_vel_level
- -  type: entities
-    show_header_toggle: false
-    state_color: true
-    title: Humidifier Timers
-    entities:
-      - input_number.humidifier_work_time
-      - sensor.humidifier_timers_stop_hours
-      - sensor.humidifier_turn_off_timer_value
-      - script.turn_off_humidifier_time
-
- -  type: entities
-    show_header_toggle: false
-    state_color: true
-    title: Humidifier Settings
-    entities:
-      - fan.xiaomi_air_humidifier
-      - switch.xiaomi_airpurifier_buzzer
-      - switch.xiaomi_airpurifier_child_lock
-      - switch.xiaomi_airpurifier_led_mid
-      - switch.xiaomi_airpurifier_led_high
-      - sensor.airhumidifier_temperature
-      - sensor.airhumidifier_humidity
-      - sensor.airhumidifier_target_humidity
-      - input_number.airhumidifier_target_humidity
-      - sensor.airhumidifier_time_work
-      - sensor.airhumidifier_water_level
-      - sensor.airhumidifier_speed
-      - automation.select_target_humidity_by_slider
-      - automation.monitor_target_humidity_and_update_slider      
