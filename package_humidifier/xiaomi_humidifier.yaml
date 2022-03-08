@@ -172,16 +172,17 @@ automation:
 
   - id: 5ddebb3e-c713-4313-a1d9-02ccbafaa628
     alias: Monitor target humidity and update slider
+    mode: trigger
     trigger:
       platform: state
       entity_id: sensor.airhumidifier_target_humidity
     condition:
       - "{{ states('sensor.airhumidifier_target_humidity')|int(default=0) != 0}}"
     action:
-      service: input_number.set_value
-      entity_id: input_number.airhumidifier_target_humidity
-      data:
-        value: "{{ state_attr('humidifier.zhimi_humidifier_ca4','humidity')|int(default=0) }}"
+      - service: input_number.set_value
+        entity_id: input_number.airhumidifier_target_humidity
+        data:
+          value: "{{ state_attr('humidifier.zhimi_humidifier_ca4','humidity')|int(default=0) }}"
 
  ###########################################################################################
 # notifica mancanza acqua
