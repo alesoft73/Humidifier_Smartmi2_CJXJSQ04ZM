@@ -190,7 +190,8 @@ automation:
   - id: 01d9e5ee-71c3-4d21-bf10-a2d7cbef7cf3
     alias: Humidifier - Water tank Empty
     initial_state: 'true'
-    mode: queued
+    mode: single
+    max_exceeded: silent
     trigger:
       - platform: numeric_state
         entity_id: sensor.zhimi_humidifier_ca4_water_level
