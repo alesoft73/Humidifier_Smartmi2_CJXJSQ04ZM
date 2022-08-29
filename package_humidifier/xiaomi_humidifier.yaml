@@ -195,7 +195,7 @@ automation:
     trigger:
       - platform: numeric_state
         entity_id: sensor.zhimi_humidifier_ca4_water_level
-        below: 10
+        below: 3
         above: 0
     action:
       # persistent_notification.create se non avete il servizio notify telegram
