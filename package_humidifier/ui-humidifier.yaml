@@ -7,16 +7,17 @@
   cards:
     - type: picture-elements
       image: /local/immagini/lovelace/vuoto+tavolo.png
-      style: |
-        @keyframes blinker { 50% { opacity: 0; } }  
-        ha-card {
-          background: none;
-          --icon-color: {% if is_state('humidifier.zhimi_humidifier_ca4', 'on') %} 
-                        red;
-                        {% else %} 
-                        #C4C4C4;
-                        {% endif %}                  
-          }
+      card_mod:
+        style: |
+          @keyframes blinker { 50% { opacity: 0; } }  
+          ha-card {
+            background: none;
+            --icon-color: {% if is_state('humidifier.zhimi_humidifier_ca4', 'on') %} 
+                          red;
+                          {% else %} 
+                          #C4C4C4;
+                          {% endif %}                  
+            }
       elements:
         - type: image
           entity: humidifier.zhimi_humidifier_ca4
@@ -129,14 +130,15 @@
             padding: 10px 13px  
 
         - type: custom:mini-graph-card
+          card_mod:
+            style: |
+              ha-card {
+                background: transparent;
+                }          
           style:
             '--ha-card-border-radius': '0px'        
             '--primary-text-color': '#C4C4C4'
             '--paper-item-icon-color': '#C4C4C4'
-            .: |
-              ha-card {
-                background: transparent;
-                }
             top: 60%
             left: 70%
             width: 45%
